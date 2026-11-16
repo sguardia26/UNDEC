@@ -5,7 +5,7 @@
 
 Desarrollo y evaluación de una red neuronal (**Perceptrón Multicapa — `MLPClassifier`**) en Python con `scikit-learn` para la clasificación binaria de billetes auténticos vs. falsificados (*Banknote Authentication*).
 
-## 🎥 Video Explicativo (Reproducción Online sin Descargar)
+## 🎥 Video Explicativo
 
 Hacé clic sobre la imagen o en el botón superior para **reproducir el video directamente en el navegador** (con selector interactivo por bloques, sin necesidad de descargar el archivo `.mp4`):
 
