@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Explicativo — TP Integrador Redes Neuronales (UNdeC)</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #0d1117;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .container {
+      max-width: 1080px;
+      width: 100%;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 20px 24px;
+      box-sizing: border-box;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    h1 {
+      font-size: 22px;
+      margin: 0 0 6px 0;
+      color: #58a6ff;
+    }
+    p.sub {
+      margin: 0 0 16px 0;
+      color: #8b949e;
+      font-size: 14px;
+    }
+    video {
+      width: 100%;
+      border-radius: 8px;
+      background: #000;
+      border: 1px solid #30363d;
+    }
+    .chapters {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .chapters button {
+      background: #21262d;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .chapters button:hover {
+      background: #30363d;
+      border-color: #58a6ff;
+      color: #fff;
+    }
+    .links {
+      margin-top: 16px;
+      font-size: 14px;
+    }
+    .links a {
+      color: #58a6ff;
+      text-decoration: none;
+      margin-right: 16px;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Trabajo Práctico Integrador — Redes Neuronales (UNdeC)</h1>
+    <p class="sub">Estudiante: Sebastián Guardia | Modelo: MLPClassifier (scikit-learn) | Dataset: Banknote Authentication</p>
+
+    <video id="vid" controls autoplay preload="metadata" poster="https://raw.githubusercontent.com/sguardia26/UNDEC/main/Redes_Neuronales/preview_video.jpg">
+      <source src="https://raw.githubusercontent.com/sguardia26/UNDEC/main/Redes_Neuronales/TP_Integrador_Red_Neuronal_Video.mp4" type="video/mp4" />
+      Tu navegador no soporta reproducción de video HTML5.
+    </video>
+
+    <div class="chapters">
+      <button onclick="seek(0)">▶ Bloque 1: Dataset y Problema (00:00)</button>
+      <button onclick="seek(61)">▶ Bloque 2: EDA y Escalado sin Data Leakage (01:01)</button>
+      <button onclick="seek(153)">▶ Bloque 3: Diseño de la Red MLP (02:33)</button>
+      <button onclick="seek(271)">▶ Bloque 4: Entrenamiento y Curva de Pérdida (04:31)</button>
+      <button onclick="seek(326)">▶ Bloque 5: Evaluación, ROC y Conclusiones (05:26)</button>
+    </div>
+
+    <div class="links">
+      <a href="https://github.com/sguardia26/UNDEC/tree/main/Redes_Neuronales">← Volver al repositorio en GitHub</a>
+      <a href="https://colab.research.google.com/github/sguardia26/UNDEC/blob/main/Redes_Neuronales/TP_Integrador_Red_Neuronal.ipynb" target="_blank">Abrir Notebook en Google Colab</a>
+    </div>
+  </div>
+
+  <script>
+    function seek(sec) {
+      const v = document.getElementById('vid');
+      v.currentTime = sec;
+      v.play();
+    }
+  </script>
+</body>
+</html>
