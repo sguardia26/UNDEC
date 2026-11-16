@@ -7,8 +7,6 @@ Desarrollo y evaluación de una red neuronal (**Perceptrón Multicapa — `MLPCl
 
 ## 🎥 Video Explicativo
 
-Hacé clic sobre la imagen o en el botón superior para **reproducir el video directamente en el navegador** (con selector interactivo por bloques, sin necesidad de descargar el archivo `.mp4`):
-
 [![Reproducir Video Explicativo Online](./preview_video.jpg)](https://htmlpreview.github.io/?https://github.com/sguardia26/UNDEC/blob/main/Redes_Neuronales/player.html)
 
 <video src="https://raw.githubusercontent.com/sguardia26/UNDEC/main/Redes_Neuronales/TP_Integrador_Red_Neuronal_Video.mp4" controls width="100%"></video>
