@@ -20,7 +20,7 @@
 
 * 📓 [`TP_Integrador_Red_Neuronal.ipynb`](./TP_Integrador_Red_Neuronal.ipynb): Jupyter Notebook completamente documentado y ejecutado (presentación y EDA, preprocesamiento sin fuga de datos, diseño y entrenamiento del `MLPClassifier`, evaluación con matriz de confusión, reporte de clasificación y curva ROC).
 * 📊 [`dataset_billetes.csv`](./dataset_billetes.csv): Conjunto de datos limpio exportado automáticamente (`1.372` filas × `5` columnas: `variance`, `skewness`, `curtosis`, `entropy` y etiqueta binaria `class`).
-* 🎬 [`TP_Integrador_Red_Neuronal_Video.mp4`](./TP_Integrador_Red_Neuronal_Video.mp4): Video explicativo del Trabajo Práctico Integrador en Full HD (`07:15 min`).
+* 🎬 [`TP_Integrador_Red_Neuronal_Video.mp4`](./TP_Integrador_Red_Neuronal_Video.mp4): Video explicativo en primera persona del Trabajo Práctico Integrador en Full HD (`11:57 min`).
 * ⚙️ [`requirements.txt`](./requirements.txt): Listado de librerías y dependencias de Python necesarias para reproducir el entorno.
 
 ---
@@ -39,11 +39,11 @@ Podés abrir, ejecutar y probar todas las celdas del Jupyter Notebook directamen
 
 ## 4. Video Explicativo (Reproducción Online sin Descargar)
 
-Hacé clic en el botón o directamente sobre la pantalla de vista previa para **reproducir el video explicativo en el navegador** (incluye controles interactivos para saltar a cada uno de los 5 bloques del guion sin necesidad de descargar el archivo `.mp4`):
+Hacé clic en el botón o directamente sobre la pantalla de vista previa para **reproducir el video explicativo en el navegador** (con tu grabación en primera persona sincronizada paso a paso con los 5 bloques del notebook, sin necesidad de descargar el archivo `.mp4`):
 
 <p align="center">
   <a href="https://htmlpreview.github.io/?https://github.com/sguardia26/UNDEC/blob/main/Redes_Neuronales/player.html" target="_blank">
-    <img src="https://img.shields.io/badge/▶️_VER_VIDEO_EXPLICATIVO_ONLINE-REPRODUCIR_SIN_DESCARGAR_(07:15)-2ea44f?style=for-the-badge&logo=youtube&logoColor=white" alt="Ver Video Online" height="44" />
+    <img src="https://img.shields.io/badge/▶️_VER_VIDEO_EXPLICATIVO_ONLINE-REPRODUCIR_SIN_DESCARGAR_(11:57)-2ea44f?style=for-the-badge&logo=youtube&logoColor=white" alt="Ver Video Online" height="44" />
   </a>
 </p>
 
