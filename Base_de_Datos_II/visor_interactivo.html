@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TP Integrador NEXUS — Persistencia Políglota | Guardia, Sebastián Nicolás (UNdeC)</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-2: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --mongo: #22c55e;
+      --redis: #ef4444;
+      --neo4j: #a855f7;
+      --colab: #f9ab00;
+      --border: rgba(148, 163, 184, 0.2);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 4rem;
+    }
+    header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 3rem 1.5rem 2.5rem;
+      text-align: center;
+    }
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+    .badge-uni {
+      display: inline-block;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      padding: 0.35rem 1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    h1 { font-size: 2.3rem; font-weight: 800; margin-bottom: 0.75rem; color: #fff; }
+    .subtitle { color: var(--muted); font-size: 1.1rem; max-width: 780px; margin: 0 auto 1.75rem; }
+    .caratula-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1rem;
+      max-width: 960px;
+      margin: 0 auto 2rem;
+      text-align: left;
+    }
+    .caratula-card {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+    }
+    .caratula-card span {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .caratula-card strong { font-size: 1.02rem; color: #fff; }
+    .cta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-colab { background: var(--colab); color: #0f172a; box-shadow: 0 4px 20px rgba(249, 171, 0, 0.35); }
+    .btn-nbviewer { background: var(--accent); color: #0f172a; box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3); }
+    .btn-github { background: var(--surface-2); color: #fff; border: 1px solid var(--border); }
+
+    nav.tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+    .tab-btn {
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.65rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: all 0.15s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+    }
+    .section { display: none; animation: fadeIn 0.25s ease; }
+    .section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h2 { font-size: 1.45rem; margin-bottom: 1rem; color: #fff; display: flex; align-items: center; gap: 0.5rem; }
+    .card h3 { font-size: 1.15rem; margin: 1.25rem 0 0.6rem; color: var(--accent); }
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+    .pillar {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.35rem;
+      border-top: 4px solid var(--accent);
+    }
+    .pillar.mongo { border-top-color: var(--mongo); }
+    .pillar.redis { border-top-color: var(--redis); }
+    .pillar.neo4j { border-top-color: var(--neo4j); }
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-right: 0.35rem;
+    }
+    .tag-mongo { background: rgba(34, 197, 94, 0.18); color: #4ade80; }
+    .tag-redis { background: rgba(239, 68, 68, 0.18); color: #f87171; }
+    .tag-neo4j { background: rgba(168, 85, 247, 0.18); color: #c084fc; }
+    .tag-ok { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.92rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.85rem 1rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: rgba(15, 23, 42, 0.8); color: var(--accent); font-weight: 700; }
+    tr:nth-child(even) td { background: rgba(15, 23, 42, 0.35); }
+
+    pre {
+      background: #090d16;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem;
+      overflow-x: auto;
+      font-family: 'Cascadia Code', Consolas, monospace;
+      font-size: 0.86rem;
+      color: #e2e8f0;
+      margin-top: 0.75rem;
+    }
+    .terminal {
+      background: #050811;
+      border: 1px solid #22c55e55;
+      color: #a7f3d0;
+      font-family: 'Cascadia Code', Consolas, monospace;
+      padding: 1.25rem;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <span class="badge-uni">Universidad Nacional de Chilecito (UNdeC)</span>
+    <h1>TP Integrador — NEXUS: Persistencia Políglota</h1>
+    <p class="subtitle">Diseño, implementación, integración y defensa de una arquitectura políglota con <strong>MongoDB Atlas</strong>, <strong>Redis Cloud</strong> y <strong>Neo4j AuraDB</strong>.</p>
+
+    <div class="caratula-grid">
+      <div class="caratula-card">
+        <span>Estudiante</span>
+        <strong>Guardia, Sebastián Nicolás</strong>
+      </div>
+      <div class="caratula-card">
+        <span>Carrera</span>
+        <strong>Tecnicatura Univ. en Ciencia de Datos</strong>
+      </div>
+      <div class="caratula-card">
+        <span>Asignatura</span>
+        <strong>Base de Datos II</strong>
+      </div>
+      <div class="caratula-card">
+        <span>Estado de Verificación</span>
+        <strong style="color:#4ade80;">✅ 10/10 Bloques Verificados (100%)</strong>
+      </div>
+    </div>
+
+    <div class="cta-bar">
+      <a class="btn btn-colab" href="https://colab.research.google.com/github/sguardia26/UNDEC/blob/main/Base_de_Datos_II/Integrador_bases_de_datos_poliglotas.ipynb" target="_blank">
+        🚀 Abrir y Ejecutar en Google Colab
+      </a>
+      <a class="btn btn-nbviewer" href="https://nbviewer.org/github/sguardia26/UNDEC/blob/main/Base_de_Datos_II/Integrador_bases_de_datos_poliglotas.ipynb" target="_blank">
+        📖 Ver Notebook Completo en Nbviewer
+      </a>
+      <a class="btn btn-github" href="https://github.com/sguardia26/UNDEC/tree/main/Base_de_Datos_II" target="_blank">
+        📂 Ver Repositorio en GitHub
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <nav class="tabs">
+    <button class="tab-btn active" onclick="showTab('arquitectura', this)">1. Arquitectura Políglota</button>
+    <button class="tab-btn" onclick="showTab('matriz', this)">2. Matriz de Decisión (CU1–CU9)</button>
+    <button class="tab-btn" onclick="showTab('verificaciones', this)">3. Resultados y Recorrido Integrador</button>
+    <button class="tab-btn" onclick="showTab('consistencia', this)">4. Consistencia ("¿Qué pasa si…?")</button>
+  </nav>
+
+  <!-- TAB 1: ARQUITECTURA -->
+  <section id="arquitectura" class="section active">
+    <div class="card">
+      <h2>🏛️ Pilares de la Arquitectura de Persistencia Políglota NEXUS</h2>
+      <p>NEXUS reemplaza el monolito tradicional por tres motores especializados coordinados desde Python, donde cada modelo de datos resuelve el patrón de acceso para el que fue diseñado:</p>
+      <div class="pillars">
+        <div class="pillar mongo">
+          <span class="tag tag-mongo">MongoDB Atlas · Documental</span>
+          <h3>Fuente de Verdad del Catálogo y Órdenes</h3>
+          <p>Almacena la colección <code>productos</code> (atributos polimórficos por categoría e inventario atómico), la colección <code>ordenes</code> (snapshots financieros inmutables con índice compuesto <code>(usuario_id, fecha DESC)</code>), <code>usuarios</code> y <code>resenas</code>.</p>
+        </div>
+        <div class="pillar redis">
+          <span class="tag tag-redis">Redis Cloud · In-Memory Key-Value</span>
+          <h3>Velocidad Sub-milisegundo, TTL y Concurrencia</h3>
+          <p>Gestiona la caché de fichas <code>cache:producto:{id}</code> (<em>Cache-Aside</em> con invalidación inmediata), carritos efímeros <code>HASH carrito:{uid}</code> con <code>EXPIRE</code>, telemetría de navegación (<code>LIST</code> + <code>ZSET</code>), sesiones activas y control atómico de <em>Flash Sale</em> (<code>DECR</code>).</p>
+        </div>
+        <div class="pillar neo4j">
+          <span class="tag tag-neo4j">Neo4j AuraDB · Grafo de Propiedades</span>
+          <h3>Red Social, Recomendaciones y Antifraude</h3>
+          <p>Modela <code>(:Usuario)-[:SIGUE]->(:Usuario)</code> y <code>(:Usuario)-[:REALIZO]->(:Orden)-[:INCLUYE]->(:Producto)</code> para resolver en 2 a 4 saltos sugerencias de amigos de amigos, co-compras, compras de la red y detección de cliques sospechosos.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>🔄 Flujo Transaccional Políglota del Checkout (CU5)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Paso</th>
+            <th>Motor</th>
+            <th>Operación y Garantía de Consistencia</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>1. Lectura del Carrito</strong></td>
+            <td><span class="tag tag-redis">Redis</span></td>
+            <td>Se lee <code>HGETALL carrito:{usuario_id}</code>. Si está vacío o expiró por TTL, lanza <code>ValueError</code> sin efectos colaterales.</td>
+          </tr>
+          <tr>
+            <td><strong>2. Validación y Descuento de Stock</strong></td>
+            <td><span class="tag tag-mongo">MongoDB</span> + <span class="tag tag-redis">Redis</span></td>
+            <td>Verifica stock y aplica <code>update_one({"id": pid, "stock": {"$gte": cant}}, {"$inc": {"stock": -cant}})</code> con compensación automática (rollback) si algún ítem falla. Invalida <code>DEL cache:producto:{pid}</code> en Redis.</td>
+          </tr>
+          <tr>
+            <td><strong>3. Orden con Snapshot de Precios</strong></td>
+            <td><span class="tag tag-mongo">MongoDB</span></td>
+            <td>Inserta en <code>mongo_db.ordenes</code> el documento inmutable con el <code>precio_unitario</code> vigente al momento de la compra.</td>
+          </tr>
+          <tr>
+            <td><strong>4. Proyección al Grafo</strong></td>
+            <td><span class="tag tag-neo4j">Neo4j</span></td>
+            <td>Ejecuta <code>MERGE (u)-[:REALIZO]->(o:Orden)-[:INCLUYE]->(p:Producto)</code> para alimentar inmediatamente las recomendaciones (CU7).</td>
+          </tr>
+          <tr>
+            <td><strong>5. Limpieza del Carrito</strong></td>
+            <td><span class="tag tag-redis">Redis</span></td>
+            <td>Elimina el carrito activo <code>DEL carrito:{usuario_id}</code> y retorna el <code>orden_id</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAB 2: MATRIZ DE DECISION -->
+  <section id="matriz" class="section">
+    <div class="card">
+      <h2>📊 Matriz de Decisión Completa (Sección 5)</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Caso de Uso</th>
+            <th>Base(s)</th>
+            <th>Modelo / Estructura</th>
+            <th>Justificación Técnica</th>
+            <th>Alternativa Descartada</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>CU1</strong> Catálogo heterogéneo</td>
+            <td><span class="tag tag-mongo">MongoDB</span></td>
+            <td>Colección <code>productos</code> con subdocumento libre <code>atributos</code> e índices en <code>categoria</code> y <code>precio</code>.</td>
+            <td>Permite alta de nuevas categorías (ej. <code>drone</code>) sin alterar esquema y filtros combinados <code>atributos.k = v</code> y <code>precio &lt;= max</code>.</td>
+            <td><strong>Redis / Neo4j:</strong> sin soporte nativo eficiente para filtros multi-atributo dinámicos sobre documentos polimórficos.</td>
+          </tr>
+          <tr>
+            <td><strong>CU2</strong> Detalle rápido</td>
+            <td><span class="tag tag-redis">Redis</span> + <span class="tag tag-mongo">MongoDB</span></td>
+            <td>Patrón <em>Cache-Aside</em>: <code>STRING cache:producto:{id}</code> con JSON y <code>TTL=300s</code>.</td>
+            <td>Sirve productos calientes desde RAM en &lt;1 ms. <code>actualizar_precio()</code> invalida con <code>DEL</code> evitando precios viejos. Fallback a Mongo si cae Redis.</td>
+            <td><strong>Solo MongoDB:</strong> mayor latencia por red/disco en productos consultados miles de veces por hora.</td>
+          </tr>
+          <tr>
+            <td><strong>CU3</strong> Navegación</td>
+            <td><span class="tag tag-redis">Redis</span></td>
+            <td><code>LIST vistas:usuario:{uid}</code> (<code>LREM+LPUSH+LTRIM</code>) y <code>ZSET vistas:ranking</code> (<code>ZINCRBY</code>).</td>
+            <td>Deduplicación y orden cronológico inverso en O(1) sobre ventana acotada, más ranking global ordenado en tiempo real en O(log N).</td>
+            <td><strong>MongoDB / Neo4j:</strong> alto costo de escritura e indexación por cada clic de navegación.</td>
+          </tr>
+          <tr>
+            <td><strong>CU4</strong> Carrito que vence</td>
+            <td><span class="tag tag-redis">Redis</span></td>
+            <td><code>HASH carrito:{uid}</code> (<code>HINCRBY</code> / <code>HDEL</code>) + <code>EXPIRE {ttl_segundos}</code>.</td>
+            <td>Incremento atómico por producto y expiración automática con precisión de segundos al cumplirse el plazo de inactividad.</td>
+            <td><strong>MongoDB:</strong> TTL Monitor corre cada 60s. <strong>Neo4j:</strong> no posee TTL nativo.</td>
+          </tr>
+          <tr>
+            <td><strong>CU5</strong> Checkout</td>
+            <td><span class="tag tag-redis">Redis</span> <span class="tag tag-mongo">MongoDB</span> <span class="tag tag-neo4j">Neo4j</span></td>
+            <td>Lectura/borrado de <code>HASH</code> en Redis + descuento de stock e inserción en <code>ordenes</code> (Mongo) + grafo <code>:REALIZO/:INCLUYE</code> (Neo4j).</td>
+            <td>Integra estado efímero de sesión, persistencia documental con snapshot contable de precios y actualización del grafo de recomendaciones.</td>
+            <td><strong>Base única:</strong> ninguna resuelve a la vez TTL de sesión, documentos anidados e inferencia en grafos.</td>
+          </tr>
+          <tr>
+            <td><strong>CU6</strong> Red social</td>
+            <td><span class="tag tag-neo4j">Neo4j</span></td>
+            <td><code>(:Usuario {id})-[:SIGUE]->(:Usuario {id})</code>.</td>
+            <td>Recorrido de 2 saltos (amigos de amigos) ordenando por cantidad de intermediarios en común mediante <em>index-free adjacency</em>.</td>
+            <td><strong>MongoDB / Redis:</strong> requerirían <code>$graphLookup</code> costosos o múltiples cruces de conjuntos en memoria de la app.</td>
+          </tr>
+          <tr>
+            <td><strong>CU7</strong> Recomendaciones</td>
+            <td><span class="tag tag-neo4j">Neo4j</span></td>
+            <td><code>(:Usuario)-[:SIGUE]->(:Usuario)-[:REALIZO]->(:Orden)-[:INCLUYE]->(:Producto)</code>.</td>
+            <td>Co-compras por orden compartida (<code>count(DISTINCT o)</code>) y compras de la red excluyendo compras propias en una sola consulta Cypher.</td>
+            <td><strong>MongoDB:</strong> múltiples <code>$unwind</code> y <code>$lookup</code> encadenados entre usuarios, seguimientos y órdenes.</td>
+          </tr>
+          <tr>
+            <td><strong>CU8</strong> Historial de compras</td>
+            <td><span class="tag tag-mongo">MongoDB</span></td>
+            <td>Colección <code>ordenes</code> con índice compuesto <code>(usuario_id, fecha DESC)</code>.</td>
+            <td>Cada orden es un documento autocontenido con sus ítems y precios históricos; se recupera en una sola lectura indexada sin joins.</td>
+            <td><strong>Neo4j:</strong> reconstruir cada orden con sus líneas exige traversals y agregaciones <code>collect()</code> innecesarias.</td>
+          </tr>
+          <tr>
+            <td><strong>CU9</strong> Sorpresas (S0–S4)</td>
+            <td><span class="tag tag-neo4j">Neo4j</span> <span class="tag tag-redis">Redis</span> <span class="tag tag-mongo">MongoDB</span></td>
+            <td><strong>S1:</strong> Cliques en Neo4j. <strong>S0/S3/S4:</strong> <code>DECR</code>, <code>SETEX+ZSET</code> y <code>ZSET</code> semanal en Redis. <strong>S2:</strong> <code>resenas</code> en MongoDB.</td>
+            <td>Las 5 sorpresas están implementadas y verificadas: S1 detecta el grupo sospechoso <code>{u13, u14, u15}</code> en Neo4j; S0/S3/S4 explotan atomicidad y TTL en Redis; S2 usa <code>$regex</code> y <code>$avg</code> en MongoDB.</td>
+            <td>Cada caso evita forzar estructuras de grafo o contadores atómicos con TTL en motores no diseñados para ello.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAB 3: VERIFICACIONES -->
+  <section id="verificaciones" class="section">
+    <div class="card">
+      <h2>✅ Resumen de Ejecución y Verificaciones (`Restart and run all`)</h2>
+      <div class="terminal">══════════════════════════════════════════════════════════
+ RESUMEN TP NEXUS — Equipo 1 (Guardia, Sebastián Nicolás)
+══════════════════════════════════════════════════════════
+ ✅ CU1         3/3 chequeos ok
+ ✅ CU2         1/1 chequeos ok
+ ✅ CU3         3/3 chequeos ok
+ ✅ CU4         3/3 chequeos ok
+ ✅ CU5         4/4 chequeos ok
+ ✅ CU6         2/2 chequeos ok
+ ✅ CU7         2/2 chequeos ok
+ ✅ CU8         2/2 chequeos ok
+ ✅ CU9         1/1 chequeos ok (Detección de cuentas sospechosas + S0..S4 5/5 ok)
+ ✅ Integrador  1/1 chequeos ok
+──────────────────────────────────────────────────────────
+ Todo ✅ — listo para entregar (Restart and run all sin errores)</div>
+
+      <h3>Recorrido Integrador End-to-End (Sección 7)</h3>
+      <div class="terminal">Mateo Navarro (u10, CABA) entra a NEXUS
+
+Busca notebooks de hasta $1.000.000:
+· p03  Notebook HP 250 G9               $560.000  (RAM 8 GB)
+· p01  Notebook Lenovo IdeaPad 3 15     $780.000  (RAM 16 GB)
+· p25  Notebook Dell Inspiron 15        $820.000  (RAM 16 GB)
+
+Mira el detalle de 3 productos:
+· Notebook HP 250 G9 — $560.000, stock 20
+· Notebook Lenovo IdeaPad 3 15 — $780.000, stock 15
+· Notebook Dell Inspiron 15 — $820.000, stock 12
+Vistos recientemente: ['Notebook Dell Inspiron 15', 'Notebook Lenovo IdeaPad 3 15', 'Notebook HP 250 G9']
+
+Agrega al carrito: Notebook HP 250 G9 → {'p03': 1}
+
+Checkout OK → orden por $560.000
+Stock de p03: 20 → 19 · carrito ahora: {}
+
+Los que compraron «Notebook HP 250 G9» también compraron:
+· Smart TV TCL 43 Full HD
+· Monitor BenQ GW2480 24
+Tu red está comprando:
+· Smart TV LG OLED C3 65
+· Sony WH-1000XM5
+· Bose QuietComfort 45
+Podrías seguir a: ['u07', 'u08', 'u14']
+Más vistos de NEXUS: [('Smart TV Philips 50 4K', 40), ('JBL Tune 510BT', 9), ('Notebook Acer Nitro V15', 5)]
+
+Fin del recorrido
+✅ Integrador · recorrido completo sin errores</div>
+    </div>
+  </section>
+
+  <!-- TAB 4: CONSISTENCIA -->
+  <section id="consistencia" class="section">
+    <div class="card">
+      <h2>🛡️ Análisis de Consistencia entre Bases (Sección 8)</h2>
+      <h3>1. ¿Qué pasa si se elimina un producto del catálogo?</h3>
+      <p>Se implementó <code>eliminar_producto(producto_id)</code> coordinando las 3 bases: elimina el documento de <code>mongo_db.productos</code>; purga en Redis la caché <code>cache:producto:{id}</code>, el ranking <code>vistas:ranking</code>, las listas <code>vistas:usuario:*</code> y los carritos activos; y elimina el nodo <code>(:Producto {id})</code> en Neo4j para que no sea recomendado. Las órdenes históricas en <code>mongo_db.ordenes</code> <strong>se preservan intactas</strong> gracias al snapshot embebido.</p>
+
+      <h3>2. ¿Qué pasa si cae Redis? (Experimento ejecutado)</h3>
+      <p>Al simular la caída de Redis con <code>with simular_caida("redis"):</code>:</p>
+      <div class="terminal">Se cae redis:
+ ✅ obtener_producto('p01'): sigue funcionando → Notebook Lenovo IdeaPad 3 15 (Degradación elegante a MongoDB)
+ ✅ buscar_productos(notebook): sigue funcionando → 6
+ ❌ vistos_recientemente('u01'): falla (ConnectionError: simulación: redis caído)
+ ❌ ver_carrito('u01'): falla (ConnectionError: simulación: redis caído)
+ ✅ seguidos('u01'): sigue funcionando → ['u02', 'u03']
+ ✅ tambien_compraron('p21'): sigue funcionando → ['p14', 'p16', 'p17']
+ ✅ recomendar_por_red('u01'): sigue funcionando → ['p17', 'p02', 'p16', 'p18', 'p23']
+ ✅ historial_compras('u01'): sigue funcionando → 3</div>
+
+      <h3>3. ¿Qué pasa si el checkout falla a mitad de camino?</h3>
+      <p>Se aplica el patrón <strong>Saga con compensación</strong> para el descuento de inventario en MongoDB (restituyendo unidades si algún ítem del carrito falla), y proyección <strong>idempotente con <code>MERGE</code></strong> hacia Neo4j, permitiendo reintentos seguros sin duplicar órdenes ni aristas en el grafo.</p>
+
+      <h3>4. ¿Qué pasa cuando cambia el precio de un producto?</h3>
+      <p>El precio maestro vive solo en <code>mongo_db.productos</code> y se invalida de inmediato en Redis (<code>DEL cache:producto:{id}</code>). Los carritos abiertos guardan solo <code>{producto_id: cantidad}</code>, por lo que toman el precio vigente al hacer checkout. Las órdenes pasadas permanecen inmutables gracias a su snapshot de <code>precio_unitario</code>.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+  function showTab(id, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+</body>
+</html>
