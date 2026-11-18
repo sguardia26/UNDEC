@@ -38,12 +38,12 @@ Explorá la arquitectura políglota, la matriz de decisión (CU1–CU9), el fluj
   </a>
 </p>
 
-### 📖 Opción C — Lectura Rápida del Notebook Renderizado (Nbviewer / GitHub)
-Visualizá el notebook completo con todas sus celdas ejecutadas, diagramas y salidas de consola directamente en el navegador:
+### 📖 Opción C — Lectura Rápida del Notebook Completo Renderizado Online (Sin Descargar)
+Visualizá las 89 celdas del notebook completo (texto, tablas, decisiones, código Python y todas sus salidas de verificación en `✅`) directamente en el navegador sin límites de API:
 
 <p align="center">
-  <a href="https://nbviewer.org/github/sguardia26/UNDEC/blob/main/Base_de_Datos_II/Integrador_bases_de_datos_poliglotas.ipynb" target="_blank">
-    <img src="https://img.shields.io/badge/📖_VER_NOTEBOOK_RENDERIZADO_(NBVIEWER)-LECTURA_ONLINE_SIN_DESCARGAR-2ea44f?style=for-the-badge&logo=jupyter&logoColor=white" alt="Ver en Nbviewer" height="44" />
+  <a href="https://htmlpreview.github.io/?https://github.com/sguardia26/UNDEC/blob/main/Base_de_Datos_II/notebook_online.html" target="_blank">
+    <img src="https://img.shields.io/badge/📖_VER_NOTEBOOK_COMPLETO_ONLINE-89_CELDAS_RENDERIZADAS_(SIN_DESCARGAR)-2ea44f?style=for-the-badge&logo=jupyter&logoColor=white" alt="Ver Notebook Completo Online" height="44" />
   </a>
 </p>
 
@@ -52,7 +52,8 @@ Visualizá el notebook completo con todas sus celdas ejecutadas, diagramas y sal
 ## 3. 📂 Contenido del Directorio `Base_de_Datos_II`
 
 * 📓 [`Integrador_bases_de_datos_poliglotas.ipynb`](./Integrador_bases_de_datos_poliglotas.ipynb): Jupyter Notebook completo, argumentado y ejecutado de punta a punta con todas las verificaciones en `✅` (`cargar_dataset()`, Matriz de Decisión, Casos de Uso `CU1` a `CU9` con las 5 sorpresas implementadas, Recorrido Integrador, Diagrama de Arquitectura y Análisis de Consistencia).
-* 🌐 [`visor_interactivo.html`](./visor_interactivo.html): Panel web interactivo para consultar la arquitectura, decisiones de persistencia y resultados de pruebas desde el navegador sin descargar el proyecto.
+* 🌐 [`visor_interactivo.html`](./visor_interactivo.html): Panel web interactivo con resumen ejecutivo y pestaña integrada del notebook completo para consultar la arquitectura, decisiones de persistencia y resultados de pruebas desde el navegador sin descargar el proyecto.
+* 📖 [`notebook_online.html`](./notebook_online.html): Renderizado HTML estático autónomo de las 89 celdas del Jupyter Notebook para lectura directa en el navegador sin depender de servidores externos como `nbviewer`.
 * ⚙️ [`requirements.txt`](./requirements.txt): Dependencias oficiales de Python (`pymongo`, `redis`, `neo4j`).
 
 ---
